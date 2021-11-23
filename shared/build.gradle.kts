@@ -8,6 +8,17 @@ plugins {
 
 version = "1.0"
 
+
+
+
+sqldelight {
+    database("TMDBAppDatabase") {
+        packageName = "com.alandvgarcia.tmdbapp.db"
+        sourceFolders = listOf("sqldelight")
+    }
+}
+
+
 kotlin {
     android()
     iosX64()
@@ -21,7 +32,7 @@ kotlin {
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
         framework {
-            baseName = "shared"
+            baseName = "tmdbapp"
         }
     }
     

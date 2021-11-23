@@ -15,15 +15,6 @@ class MovieApi : ApiSettings() {
             pathComponents("popular")
             parameters.append("page", page.toString())
         }.buildString()
-
         return ClientService().safeResponse<Nothing, PagingResponse<MovieResponse>>(url)
     }
-
-
-}
-
-
-sealed class ClientServiceResult<out T> {
-    data class Success<T>(val result: T) : ClientServiceResult<T>()
-    data class Error(val error: String) : ClientServiceResult<Nothing>()
 }

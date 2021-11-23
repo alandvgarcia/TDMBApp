@@ -19,10 +19,6 @@ abstract class ApiSettings {
         }
     }
 
-
-
-
-
     val urlBuilder = URLBuilder(url).apply {
         path(apiVersion)
         parameters.append("api_key", getToken())

@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
+        ApiSettings.setToken("8aa61303fe43973122e7b287a5c13c42")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
