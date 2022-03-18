@@ -11,7 +11,7 @@ class MovieApi : ApiSettings() {
     }
 
     suspend fun getPopularMovies(page: Int): ClientServiceResult<PagingResponse<MovieResponse>> {
-        val url = urlBuilderMovies.apply {
+        val url = URLBuilder(urlBuilderMovies).apply {
             pathComponents("popular")
             parameters.append("page", page.toString())
         }.buildString()

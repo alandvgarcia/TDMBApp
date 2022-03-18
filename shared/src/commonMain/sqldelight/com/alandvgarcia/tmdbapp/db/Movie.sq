@@ -21,3 +21,9 @@ DELETE FROM Movie;
 
 deleteById:
 DELETE FROM Movie WHERE id == :id;
+
+selectPopularMovies:
+SELECT * FROM Movie ORDER BY popularity DESC;
+
+selectTopRated:
+SELECT * FROM Movie ORDER BY voteAverage DESC;

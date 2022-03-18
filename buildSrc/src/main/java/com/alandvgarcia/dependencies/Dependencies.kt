@@ -1,12 +1,12 @@
 import org.gradle.kotlin.dsl.extra
 
 object Version{
-    const val kotlin = "1.6.0"
-    const val sqlDelight = "1.5.2"
-    const val ktorVersion = "1.6.2-native-mm-eap-196"
-    const val coroutinesShared = "1.5.1-new-mm-dev2"
+    const val kotlin = "1.6.10"
+    const val sqlDelight = "1.5.3"
+    const val ktorVersion = "2.0.0-beta-1"
+    const val coroutinesShared = "1.6.0"
     const val serialization = "1.2.2"
-    const val kermit = "1.0.0"
+    const val kermit = "1.0.3"
     const val gradleAGPPlugin = "7.0.3"
 }
 
@@ -24,6 +24,8 @@ object Deps {
         const val ktorClientIos = "io.ktor:ktor-client-ios:${Version.ktorVersion}"
         const val ktorClientAndroid = "io.ktor:ktor-client-android:${Version.ktorVersion}"
         const val ktorLog = "io.ktor:ktor-client-logging:${Version.ktorVersion}"
+        const val ktorContentNegotiation = "io.ktor:ktor-client-content-negotiation:${Version.ktorVersion}"
+        const val ktorJson = "io.ktor:ktor-serialization-kotlinx-json:${Version.ktorVersion}"
     }
     object Coroutines{
         const val coroutinesShared = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutinesShared}"

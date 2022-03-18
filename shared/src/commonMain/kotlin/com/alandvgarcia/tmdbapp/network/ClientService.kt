@@ -2,21 +2,22 @@ package com.alandvgarcia.tmdbapp.network
 
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.client.utils.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
 class ClientService {
     val client = HttpClient {
         install(HttpTimeout) {
             requestTimeoutMillis = 30_000
         }
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(json = kotlinx.serialization.json.Json {
+
+
+        install(ContentNegotiation) {
+            json(Json {
                 useAlternativeNames = false
                 isLenient = true
                 ignoreUnknownKeys = true
@@ -39,7 +40,7 @@ class ClientService {
         headers: HashMap<String, String>? = null
     ): ClientServiceResult<E> {
         return try {
-            val result = client.request<HttpResponse>(url) {
+            val result = client.request(url) {
                 method = httpMethod
                 headers?.forEach {
                     headers {
@@ -48,11 +49,11 @@ class ClientService {
                 }
                 if (httpMethod == HttpMethod.Post || httpMethod == HttpMethod.Put || httpMethod == HttpMethod.Patch) {
                     contentType(ContentType.Application.Json)
-                    this.body = body ?: EmptyContent
+                    setBody(body ?: EmptyContent)
                 }
             }
             return if (result.status.isSuccess()) {
-                ClientServiceResult.Success(result.receive())
+                ClientServiceResult.Success(result.body())
             } else {
                 try {
                     ClientServiceResult.Error(
