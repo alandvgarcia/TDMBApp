@@ -1,10 +1,12 @@
 buildscript {
+    val compose_version by extra("1.0.1")
     repositories {
         gradlePluginPortal()
         google()
         mavenCentral()
     }
     dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
         with(Deps.Classpath){
             classpath(kotlin)
             classpath(androidTools)
