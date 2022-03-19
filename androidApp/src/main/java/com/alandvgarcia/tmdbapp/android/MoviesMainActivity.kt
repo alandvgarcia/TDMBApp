@@ -3,26 +3,31 @@ package com.alandvgarcia.tmdbapp.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.alandvgarcia.tmdbapp.android.ui.theme.TMDB_AppTheme
 import com.alandvgarcia.tmdbapp.database.appContext
 import com.alandvgarcia.tmdbapp.db.Movie
 import com.alandvgarcia.tmdbapp.network.ApiSettings
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.alandvgarcia.tmdbapp.network.enum.MovieApiTypeEnum
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import okhttp3.internal.filterList
 
 class MoviesMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +43,7 @@ class MoviesMainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainView()
+                    MoviesView(movieApiTypeEnum = MovieApiTypeEnum.POPULAR)
                 }
             }
         }
@@ -46,43 +51,99 @@ class MoviesMainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainView(viewModel: MoviesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun MoviesView(
+    viewModel: MoviesViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    movieApiTypeEnum: MovieApiTypeEnum
+) {
 
-    var page by remember {
-        mutableStateOf(1)
+
+    var movies by remember {
+        mutableStateOf(listOf<Movie>())
+    }
+    var refreshData by remember {
+        mutableStateOf(false)
     }
 
-    PopularMoviesListView(movies = viewModel.popularMoviesFlow) {
-        page++
-    }.apply {
-        viewModel.getMovies(page)
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    LaunchedEffect(true) {
+        viewModel.moviesFlow(movieApiTypeEnum = movieApiTypeEnum).collectLatest { newMovieList ->
+            if (newMovieList.isEmpty()) {
+                viewModel.getMovies(movieApiTypeEnum)
+            }
+            movies = newMovieList
+            delay(1500)
+            refreshData = false
+        }
     }
+
+    MovieListView(
+        movies = movies,
+        isLoading, refreshData, onRefresh = {
+            viewModel.getMovies(movieApiTypeEnum, true)
+            refreshData = true
+        }, onPageEnd = {
+            viewModel.getMovies(movieApiTypeEnum, refreshData)
+        })
 }
 
+const val urlImage = "https://image.tmdb.org/t/p/w400"
+
 @Composable
-fun PopularMoviesListView(movies: Flow<List<Movie>>, onPageEnd: () -> Unit) {
-
-    val moviesState by movies.collectAsState(initial = listOf())
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(moviesState) { movie ->
-            Row {
-                AsyncImage(
-                    ImageRequest.Builder(LocalContext.current)
-                        .data("https://image.tmdb.org/t/p/w400${movie.posterPath}")
-                        .crossfade(true)
-                        .build(), contentDescription = null
-                )
-                Column {
-                    Text(movie.title ?: "")
-                    Text(movie.overview ?: "")
+fun MovieListView(
+    movies: List<Movie>,
+    isLoading: Boolean,
+    refreshData: Boolean,
+    onRefresh: () -> Unit,
+    onPageEnd: () -> Unit
+) {
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = refreshData), onRefresh = {
+        if (!refreshData)
+            onRefresh()
+    }) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(movies) { movie ->
+                Card(
+                    Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .height(220.dp)
+                ) {
+                    Row {
+                        AsyncImage(
+                            ImageRequest.Builder(LocalContext.current)
+                                .data("$urlImage${movie.posterPath}")
+                                .crossfade(true)
+                                .build(), contentDescription = null
+                        )
+                        Column(Modifier.padding(8.dp)) {
+                            Text(
+                                movie.title ?: "",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+                            Text(
+                                movie.overview ?: "",
+                                maxLines = 4,
+                                fontWeight = FontWeight.Light,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }.apply {
+                    if (movie.id == movies.last().id && !refreshData && !isLoading)
+                        onPageEnd()
                 }
-            }.apply {
-                if (movie.id == moviesState.last().id)
-                    onPageEnd()
             }
+            if (isLoading)
+                item {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    }
+                }
         }
     }
 
@@ -93,7 +154,7 @@ fun PopularMoviesListView(movies: Flow<List<Movie>>, onPageEnd: () -> Unit) {
 @Composable
 fun MoviesViewContent() {
     TMDB_AppTheme {
-        PopularMoviesListView(movies = flow { }) {
+        MovieListView(movies = listOf(), false, false, onRefresh = {}) {
 
         }
     }

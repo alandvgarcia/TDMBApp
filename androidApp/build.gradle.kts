@@ -80,4 +80,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.0.0-rc01")
 
 
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.4-alpha")
+
 }
