@@ -21,7 +21,7 @@ class MovieRepository() {
 
     val moviesPopular = database.movieQueries.selectPopularMovies().asFlow().mapToList()
     val moviesTopRated = database.movieQueries.selectTopRated().asFlow().mapToList()
-    val moviesLatest = database.movieQueries.selectTopRated().asFlow().mapToList()
+    val moviesLatest = database.movieQueries.selectLatest().asFlow().mapToList()
 
     suspend fun getMovies(
         movieApiTypeEnum: MovieApiTypeEnum,
@@ -42,7 +42,7 @@ class MovieRepository() {
 
         val result = when (movieApiTypeEnum) {
             MovieApiTypeEnum.POPULAR -> movieApi.getPopularMovies(page)
-            MovieApiTypeEnum.TOP_RATED -> movieApi.getPopularMovies(page)
+            MovieApiTypeEnum.TOP_RATED -> movieApi.getTopRatedMovies(page)
             MovieApiTypeEnum.LATEST -> movieApi.getLatestMovies(page)
         }
 

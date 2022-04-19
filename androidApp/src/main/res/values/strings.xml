@@ -1,3 +1,6 @@
 <resources>
     <string name="title_activity_movies_main">MoviesMainActivity</string>
+    <string name="popular">Popular</string>
+    <string name="topRated">Top Rated</string>
+    <string name="lasted">"Lasted "</string>
 </resources>

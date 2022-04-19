@@ -79,6 +79,13 @@ kotlin {
     }
 }
 
+kotlin.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java) {
+    binaries.all {
+        binaryOptions["memoryModel"] = "experimental"
+        binaryOptions["freezing"] = "disabled"
+    }
+}
+
 android {
     compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")

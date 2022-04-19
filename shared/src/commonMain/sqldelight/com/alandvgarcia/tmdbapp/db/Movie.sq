@@ -28,6 +28,8 @@ SELECT * FROM Movie ORDER BY popularity DESC;
 selectTopRated:
 SELECT * FROM Movie ORDER BY voteAverage DESC;
 
+selectLatest:
+SELECT * FROM Movie ORDER BY releaseDate DESC;
 
 CREATE TABLE MovieLatestPagingKey(
     id INTEGER PRIMARY KEY

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.google.devtools.ksp") version "1.6.10-1.0.4" // Depends on your kotlin version
 }
 
 android {
@@ -38,6 +39,13 @@ android {
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    applicationVariants.all {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
         }
     }
 
@@ -81,5 +89,11 @@ dependencies {
 
 
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.4-alpha")
+
+    val navVersion = "2.4.1"
+    implementation("androidx.navigation:navigation-compose:$navVersion")
+
+    implementation("io.github.raamcosta.compose-destinations:core:1.4.4-beta")
+    ksp("io.github.raamcosta.compose-destinations:ksp:1.4.4-beta")
 
 }
