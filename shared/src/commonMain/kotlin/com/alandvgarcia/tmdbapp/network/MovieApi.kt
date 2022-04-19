@@ -17,4 +17,25 @@ class MovieApi : ApiSettings() {
         }.buildString()
         return ClientService().safeResponse<Nothing, PagingResponse<MovieResponse>>(url)
     }
+
+    suspend fun getTopRatedMovies(page: Int): ClientServiceResult<PagingResponse<MovieResponse>> {
+        val url = URLBuilder(urlBuilderMovies).apply {
+            pathComponents("top_rated")
+            parameters.append("page", page.toString())
+        }.buildString()
+        return ClientService().safeResponse<Nothing, PagingResponse<MovieResponse>>(url)
+    }
+
+
+    suspend fun getLatestMovies(page: Int): ClientServiceResult<PagingResponse<MovieResponse>> {
+        val url = URLBuilder(urlBuilderMovies).apply {
+            pathComponents("latest")
+            parameters.append("page", page.toString())
+        }.buildString()
+        return ClientService().safeResponse<Nothing, PagingResponse<MovieResponse>>(url)
+    }
+
+
+
+
 }

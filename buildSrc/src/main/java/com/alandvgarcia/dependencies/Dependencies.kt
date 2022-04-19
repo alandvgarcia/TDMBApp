@@ -3,9 +3,9 @@ import org.gradle.kotlin.dsl.extra
 object Version{
     const val kotlin = "1.6.10"
     const val sqlDelight = "1.5.3"
-    const val ktorVersion = "2.0.0-beta-1"
-    const val coroutinesShared = "1.6.0"
-    const val serialization = "1.2.2"
+    const val ktorVersion = "2.0.0"
+    const val coroutinesShared = "1.6.0-native-mt"
+    const val serialization = "1.3.2"
     const val kermit = "1.0.3"
     const val gradleAGPPlugin = "7.0.3"
 }

@@ -27,3 +27,45 @@ SELECT * FROM Movie ORDER BY popularity DESC;
 
 selectTopRated:
 SELECT * FROM Movie ORDER BY voteAverage DESC;
+
+selectLatest:
+SELECT * FROM Movie ORDER BY releaseDate DESC;
+
+CREATE TABLE MovieLatestPagingKey(
+    id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE MoviePopularPagingKey(
+    id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE MovieTopRatedPagingKey(
+    id INTEGER PRIMARY KEY
+);
+
+insertMovieLatestPagingKey:
+INSERT OR REPLACE INTO MovieLatestPagingKey (id) VALUES (?);
+
+insertMoviePopularPagingKey:
+INSERT OR REPLACE INTO MoviePopularPagingKey (id) VALUES (?);
+
+insertMovieTopRatedPagingKey:
+INSERT OR REPLACE INTO MovieTopRatedPagingKey (id) VALUES (?);
+
+selectLastMovieLatestPagingKey:
+SELECT * FROM MovieLatestPagingKey WHERE (SELECT MAX(id) FROM MovieLatestPagingKey) == id;
+
+selectLastMoviePopularPagingKey:
+SELECT * FROM MoviePopularPagingKey WHERE (SELECT MAX(id) FROM MoviePopularPagingKey) == id;
+
+selectLastMovieTopRatedPagingKey:
+SELECT * FROM MovieTopRatedPagingKey WHERE (SELECT MAX(id) FROM MovieTopRatedPagingKey) == id;
+
+deleteAllMoviePopularPagingKey:
+DELETE FROM MoviePopularPagingKey;
+
+deleteAllMovieLatestPagingKey:
+DELETE FROM MovieLatestPagingKey;
+
+deleteAllMovieTopRatedPagingKey:
+DELETE FROM MovieTopRatedPagingKey;
