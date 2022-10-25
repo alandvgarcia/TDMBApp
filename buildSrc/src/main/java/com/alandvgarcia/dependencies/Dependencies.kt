@@ -7,7 +7,7 @@ object Version{
     const val coroutinesShared = "1.6.0-native-mt"
     const val serialization = "1.3.2"
     const val kermit = "1.0.3"
-    const val gradleAGPPlugin = "7.0.3"
+    const val gradleAGPPlugin = "8.0.0-alpha02"
 }
 
 

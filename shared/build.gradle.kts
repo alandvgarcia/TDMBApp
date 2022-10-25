@@ -34,6 +34,7 @@ kotlin {
     }
     
     sourceSets {
+
         val commonMain by getting{
             dependencies{
                 implementation(Deps.Ktor.ktorClientCore)
@@ -49,12 +50,22 @@ kotlin {
                 api(Deps.Log.kermit)
                 implementation(Deps.Ktor.ktorContentNegotiation)
                 implementation(Deps.Ktor.ktorJson)
+                implementation(Deps.Ktor.ktorLog)
+
             }
         }
         val commonTest by getting {
             dependencies {
+                implementation(Deps.Coroutines.coroutinesShared){
+                    version{
+                        strictly(Version.coroutinesShared)
+                    }
+                }
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation("io.ktor:ktor-server-test-host:${Version.ktorVersion}")
+                implementation("org.jetbrains.kotlin:kotlin-test:1.6.10")
+                implementation("io.ktor:ktor-client-mock:${Version.ktorVersion}")
             }
         }
         val androidMain by getting {
@@ -76,6 +87,24 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
         }
+
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
+        }
+
+        val androidTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
+            }
+        }
+
     }
 }
 
@@ -87,10 +116,10 @@ kotlin.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarge
 }
 
 android {
-    compileSdk = 31
+    compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 33
     }
 }

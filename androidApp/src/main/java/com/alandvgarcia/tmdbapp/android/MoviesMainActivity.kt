@@ -20,7 +20,7 @@ import com.alandvgarcia.tmdbapp.network.enum.MovieApiTypeEnum
 class MoviesMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        ApiSettings.setToken("PUT YOUR KEY HERE")
+        ApiSettings.setToken(BuildConfig.MOVIE_API_KEY)
         appContext = applicationContext
 
         super.onCreate(savedInstanceState)
@@ -31,7 +31,7 @@ class MoviesMainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Scaffold {
+                    Scaffold() {
                         MoviesView(movieApiTypeEnum = MovieApiTypeEnum.POPULAR)
                     }
                 }

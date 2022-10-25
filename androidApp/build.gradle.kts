@@ -15,6 +15,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField(
+            "String",
+            "MOVIE_API_KEY",
+            System.getenv("movieApiKey") ?: project.properties["movieApiKey"].toString()
+        )
     }
     buildTypes {
         getByName("release") {
