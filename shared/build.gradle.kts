@@ -1,9 +1,12 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     kotlin("multiplatform")
     id("kotlinx-serialization")
     id("com.squareup.sqldelight")
     kotlin("native.cocoapods")
     id("com.android.library")
+    id("com.codingfeline.buildkonfig")
 }
 
 version = "1.0"
@@ -32,15 +35,15 @@ kotlin {
             baseName = "tmdbapp"
         }
     }
-    
+
     sourceSets {
 
-        val commonMain by getting{
-            dependencies{
+        val commonMain by getting {
+            dependencies {
                 implementation(Deps.Ktor.ktorClientCore)
                 implementation(Deps.Ktor.ktorClientSerialization)
-                implementation(Deps.Coroutines.coroutinesShared){
-                    version{
+                implementation(Deps.Coroutines.coroutinesShared) {
+                    version {
                         strictly(Version.coroutinesShared)
                     }
                 }
@@ -56,8 +59,8 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation(Deps.Coroutines.coroutinesShared){
-                    version{
+                implementation(Deps.Coroutines.coroutinesShared) {
+                    version {
                         strictly(Version.coroutinesShared)
                     }
                 }
@@ -69,7 +72,7 @@ kotlin {
             }
         }
         val androidMain by getting {
-            dependencies{
+            dependencies {
                 implementation(Deps.Ktor.ktorClientAndroid)
                 implementation(Deps.SqlDelight.sqlDelightAndroid)
             }
@@ -121,5 +124,17 @@ android {
     defaultConfig {
         minSdk = 21
         targetSdk = 33
+    }
+}
+
+buildkonfig {
+    packageName = "com.alandvgarcia.tmdbapp"
+
+    defaultConfigs {
+        buildConfigField(
+            STRING,
+            "movieApiKey",
+            System.getenv("movieApiKey") ?: project.properties["movieApiKey"].toString()
+        )
     }
 }

@@ -20,7 +20,6 @@ import com.alandvgarcia.tmdbapp.network.enum.MovieApiTypeEnum
 class MoviesMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        ApiSettings.setToken(BuildConfig.MOVIE_API_KEY)
         appContext = applicationContext
 
         super.onCreate(savedInstanceState)

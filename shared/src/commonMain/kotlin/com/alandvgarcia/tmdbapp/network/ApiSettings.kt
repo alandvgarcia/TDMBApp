@@ -1,5 +1,6 @@
 package com.alandvgarcia.tmdbapp.network
 
+import com.alandvgarcia.tmdbapp.BuildKonfig
 import io.ktor.http.*
 
 abstract class ApiSettings {
@@ -8,15 +9,8 @@ abstract class ApiSettings {
         private const val url =
             "https://api.themoviedb.org"
 
-
-        private var token: String? = null
-
         fun getToken(): String
-                = token ?: kotlin.run { throw Exception("Not have a token configured") }
-
-        fun setToken(token: String){
-            this.token = token
-        }
+                = BuildKonfig.movieApiKey
     }
 
     val urlBuilder = URLBuilder(url).apply {

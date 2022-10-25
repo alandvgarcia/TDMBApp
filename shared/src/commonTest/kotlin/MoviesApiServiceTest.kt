@@ -7,10 +7,6 @@ import kotlin.test.assertEquals
 
 
 class MoviesApiServiceTest {
-    @BeforeTest
-    fun `set token test`() {
-        ApiSettings.setToken("8aa61303fe43973122e7b287a5c13c42")
-    }
 
     @Test
     fun `test request movies paging success`() = testApplication {
