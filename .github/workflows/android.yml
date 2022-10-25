@@ -38,4 +38,12 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: app
-          path: androidApp/build/outputs/apk/debug/app-debug.apk
+          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+
+      - name: Build debug Bundle
+        run: bash ./gradlew assembleDebug --stacktrace
+      - name: Upload Bundle
+        uses: actions/upload-artifact@v1
+        with:
+          name: app
+          path: androidApp/build/outputs/bundle/debug/androidApp-debug.aab
