@@ -17,7 +17,8 @@ import kotlinx.serialization.json.Json
 interface ClientServiceImplementation {
     val client: HttpClient
 }
-class ClientService: ClientServiceImplementation {
+
+class ClientService : ClientServiceImplementation {
     override val client = HttpClient {
         install(HttpTimeout) {
             requestTimeoutMillis = 30_000
@@ -41,6 +42,7 @@ class ClientService: ClientServiceImplementation {
         }
     }
 }
+
 suspend inline fun <T, reified E> ClientServiceImplementation.safeResponse(
     url: String,
     body: T? = null,
@@ -73,7 +75,5 @@ suspend inline fun <T, reified E> ClientServiceImplementation.safeResponse(
         }
     } catch (e: Exception) {
         ClientServiceResult.Error(e.message.toString())
-    } finally {
-        client.close()
     }
 }
